@@ -277,6 +277,7 @@ module Lab2(LEDR, HEX0, HEX1, SW);
 	wire [13:0] t0, t1, t2;
 	
 	assign Value0[5:0] = SW[5:0];
+  assign Value0[13:6] = 1'b0;
 	
 	BCD_Converter B0(Value0[13:0], t0[13:0]);
 	BCD_Converter B1(t0[13:0], Value1[13:0]);
@@ -285,8 +286,8 @@ module Lab2(LEDR, HEX0, HEX1, SW);
 	BCD_Converter B4(Value2[13:0], t2[13:0]);
 	BCD_Converter B5(t2[13:0], Value3[13:0]);
 		
-	BCD_7seg	Segment0(Value0[9:6], HEX0);
-	BCD_7seg	Segment1(Value0[13:10], HEX1);
+	BCD_7seg Segment0(Value3[9:6], HEX0);
+	BCD_7seg Segment1(Value3[13:10], HEX1);
 	
 	assign LEDR[9:0] = SW[9:0];
 	
@@ -303,7 +304,8 @@ module BCD_Converter(Value, temp);
 	Greater_Than G1(Value[9:6], C1);
 	
 	assign temp2[13:10] = Value[13:10] + (4'b0011 & {4{C0}});
-	assign temp2[9:6]= Value[9:6] + (4'b0011 & {4{C1}});
+	assign temp2[9:6] = Value[9:6] + (4'b0011 & {4{C1}});
+  assign temp2[5:0] = Value[5:0];
 	
 	assign temp = {temp2[12:0], 1'b0};
 	
