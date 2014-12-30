@@ -268,7 +268,6 @@ module BCD_7seg(Value, Display);
 endmodule	
 */
 
-/* Step 6
 module Lab2(LEDR, HEX0, HEX1, SW);
 	
 	input [9:0] SW;
@@ -335,13 +334,12 @@ module BCD_7seg(Value, Display);
 	input [3:0] Value;
 	output [0:6] Display;
 	
-	assign Display[0] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : 0));
-	assign Display[1] = (Value == 4'h5 ? 1 : (Value == 4'h6 ? 1 : 0));
-	assign Display[2] = (Value == 4'h2 ? 1 : 0);
-	assign Display[3] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))));
-	assign Display[4] = (Value == 4'h1 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h5 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))))));
-	assign Display[5] = (Value == 4'h1 ? 1 : (Value == 4'h2 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h7 ? 1 : 0))));
-	assign Display[6] = (Value == 4'h0 ? 1 : (Value == 4'h1 ? 1 : (Value == 4'h7 ? 1 : 0)));
+	assign Display[0] = ((Value[3] & Value[0]) & (Value[2] | Value[1])) | (~Value[3] & ~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]);
+	assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
+	assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
+	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | ~Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+	assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
 	
 endmodule
-*/
