@@ -268,6 +268,7 @@ module BCD_7seg(Value, Display);
 endmodule	
 */
 
+/* Step 6
 module Lab2(LEDR, HEX0, HEX1, SW);
 	
 	input [9:0] SW;
@@ -343,3 +344,4 @@ module BCD_7seg(Value, Display);
 	assign Display[6] = (Value == 4'h0 ? 1 : (Value == 4'h1 ? 1 : (Value == 4'h7 ? 1 : 0)));
 	
 endmodule
+*/
