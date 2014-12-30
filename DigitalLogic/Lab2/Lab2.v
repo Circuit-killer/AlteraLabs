@@ -17,13 +17,13 @@ module BCD_7seg(Value, Display);
 	input [3:0] Value;
 	output [0:6] Display;
 	
-	assign Display[0] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : 0));
-	assign Display[1] = (Value == 4'h5 ? 1 : (Value == 4'h6 ? 1 : 0));
-	assign Display[2] = (Value == 4'h2 ? 1 : 0);
-	assign Display[3] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))));
-	assign Display[4] = (Value == 4'h1 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h5 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))))));
-	assign Display[5] = (Value == 4'h1 ? 1 : (Value == 4'h2 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h7 ? 1 : 0))));
-	assign Display[6] = (Value == 4'h0 ? 1 : (Value == 4'h1 ? 1 : (Value == 4'h7 ? 1 : 0)));
+	assign Display[0] = (Value[3] & Value[0] & (Value[2] ^ Value[1])) | (~Value[3] & ~Value[1] & (Value[2] ^ Value[0]));
+	assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
+	assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
+	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+	assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
 	
 endmodule
 */
@@ -52,13 +52,13 @@ module BCD_7seg(Value, Display);
 	input [3:0] Value;
 	output [0:6] Display;
 	
-	assign Display[0] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : 0));
-	assign Display[1] = (Value == 4'h5 ? 1 : (Value == 4'h6 ? 1 : 0));
-	assign Display[2] = (Value == 4'h2 ? 1 : 0);
-	assign Display[3] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))));
-	assign Display[4] = (Value == 4'h1 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h5 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))))));
-	assign Display[5] = (Value == 4'h1 ? 1 : (Value == 4'h2 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h7 ? 1 : 0))));
-	assign Display[6] = (Value == 4'h0 ? 1 : (Value == 4'h1 ? 1 : (Value == 4'h7 ? 1 : 0)));
+	assign Display[0] = (Value[3] & Value[0] & (Value[2] ^ Value[1])) | (~Value[3] & ~Value[1] & (Value[2] ^ Value[0]));
+	assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
+	assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
+	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+	assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
 	
 endmodule
 
@@ -77,7 +77,7 @@ module HexDisp(Value, C, Out);
 	input C;
 	output [3:0] Out;
 	
-	assign Out = C ? (Value - 4'b1010) : Value;
+	assign Out = Value - (4'b1010 & {4{C}});
 	
 endmodule
 */
@@ -168,13 +168,13 @@ module BCD_7seg(Value, Display);
 	input [3:0] Value;
 	output [0:6] Display;
 	
-	assign Display[0] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : 0));
-	assign Display[1] = (Value == 4'h5 ? 1 : (Value == 4'h6 ? 1 : 0));
-	assign Display[2] = (Value == 4'h2 ? 1 : 0);
-	assign Display[3] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))));
-	assign Display[4] = (Value == 4'h1 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h5 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))))));
-	assign Display[5] = (Value == 4'h1 ? 1 : (Value == 4'h2 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h7 ? 1 : 0))));
-	assign Display[6] = (Value == 4'h0 ? 1 : (Value == 4'h1 ? 1 : (Value == 4'h7 ? 1 : 0)));
+	assign Display[0] = (Value[3] & Value[0] & (Value[2] ^ Value[1])) | (~Value[3] & ~Value[1] & (Value[2] ^ Value[0]));
+	assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
+	assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
+	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+	assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
 	
 endmodule
 
@@ -193,7 +193,7 @@ module HexDisp(Value, C, Out);
 	input C;
 	output [4:0] Out;
 	
-	assign Out = C ? (Value + 5'b00110) : Value;
+	assign Out = Value + (5'b00110 & {5{C}});
 	
 endmodule
 
@@ -240,7 +240,7 @@ module Lab2(LEDR, SW, HEX0, HEX1, HEX3, HEX5);
 		Sum[4:0] = Z0[4:0] - T0[4:0];
 	end 
 	
-	BCD_7seg	Segment1(Sum[3:0], HEX0);
+	BCD_7seg Segment1(Sum[3:0], HEX0);
 	BCD_7seg Segment2(C[1], HEX1);
 	BCD_7seg Segment3(B[3:0], HEX3);
 	BCD_7seg Segment4(A[3:0], HEX5);
@@ -257,17 +257,18 @@ module BCD_7seg(Value, Display);
 	input [3:0] Value;
 	output [0:6] Display;
 	
-	assign Display[0] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : 0));
-	assign Display[1] = (Value == 4'h5 ? 1 : (Value == 4'h6 ? 1 : 0));
-	assign Display[2] = (Value == 4'h2 ? 1 : 0);
-	assign Display[3] = (Value == 4'h1 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))));
-	assign Display[4] = (Value == 4'h1 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h4 ? 1 : (Value == 4'h5 ? 1 : (Value == 4'h7 ? 1 : (Value == 4'h9 ? 1 : 0))))));
-	assign Display[5] = (Value == 4'h1 ? 1 : (Value == 4'h2 ? 1 : (Value == 4'h3 ? 1 : (Value == 4'h7 ? 1 : 0))));
-	assign Display[6] = (Value == 4'h0 ? 1 : (Value == 4'h1 ? 1 : (Value == 4'h7 ? 1 : 0)));
+	assign Display[0] = (Value[3] & Value[0] & (Value[2] ^ Value[1])) | (~Value[3] & ~Value[1] & (Value[2] ^ Value[0]));
+	assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
+	assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+	assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
+	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+	assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
 	
-endmodule	
+endmodule
 */
 
+/* Step 6
 module Lab2(LEDR, HEX0, HEX1, SW);
 	
 	input [9:0] SW;
@@ -334,12 +335,13 @@ module BCD_7seg(Value, Display);
 	input [3:0] Value;
 	output [0:6] Display;
 	
-	assign Display[0] = ((Value[3] & Value[0]) & (Value[2] | Value[1])) | (~Value[3] & ~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]);
+	assign Display[0] = (Value[3] & Value[0] & (Value[2] ^ Value[1])) | (~Value[3] & ~Value[1] & (Value[2] ^ Value[0]));
 	assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
 	assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
 	assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
 	assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
-	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | ~Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+	assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
 	assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
 	
 endmodule
+*/
