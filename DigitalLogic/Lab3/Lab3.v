@@ -126,6 +126,7 @@ module D_FF(D, Clk, Q);
 endmodule
 */
 
+/* Step 5
 module Lab3(LEDR, SW, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
 
   input [9:0] SW;
@@ -133,22 +134,21 @@ module Lab3(LEDR, SW, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
   output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
 
   wire [7:0] A, B;
-  wire [7:0] Ao;//Bo;
+  wire [7:0] Ao;
   wire [8:0] Sum;
 
   assign LEDR [9:1] = 9'b0;
-  assign A [7:0] = SW[7:0];
-  assign B [7:0] = SW[7:0];
+  assign A [7:0] = SW[9:2];
+  assign B [7:0] = SW[9:2];
 
-  D_FF F0(.D(A), .Clk(SW[1]), .R(~SW[0]), .Q(Ao));
-  //D_FF F1(.D(B), .Clk(SW[1]), .R(~SW[0]), .Q(Bo));
+  D_FF F0(.D(A), .Clk(SW[1]), .R(SW[0]), .Q(Ao));
  
   Adder A0(.A(Ao), .B(B), .S(Sum));
 
   BCD_7seg Seg0(.Value(B[3:0]), .Display(HEX0[0:6]));
   BCD_7seg Seg1(.Value(B[7:4]), .Display(HEX1[0:6]));
-  BCD_7seg Seg2(.Value(A[3:0]), .Display(HEX2[0:6]));
-  BCD_7seg Seg3(.Value(A[7:4]), .Display(HEX3[0:6]));
+  BCD_7seg Seg2(.Value(Ao[3:0]), .Display(HEX2[0:6]));
+  BCD_7seg Seg3(.Value(Ao[7:4]), .Display(HEX3[0:6]));
   BCD_7seg Seg4(.Value(Sum[3:0]), .Display(HEX4[0:6]));
   BCD_7seg Seg5(.Value(Sum[7:4]), .Display(HEX5[0:6]));
 
@@ -162,13 +162,13 @@ module D_FF(D, Clk, R, Q);
   input Clk, R;
 	output reg [7:0] Q;
 	
-	always @ (posedge Clk or R)
+	always @ (posedge Clk or negedge R)
 	begin
-    if(R)
+    if(~R)
     begin
       Q [7:0] <= 8'h00;
     end
-    else if(Clk)
+    else
     begin
 		  Q [7:0] <= D [7:0];
     end
@@ -199,3 +199,4 @@ module BCD_7seg(Value, Display);
   assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
    
 endmodule 
+*/
