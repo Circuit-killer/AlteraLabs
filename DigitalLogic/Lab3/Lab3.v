@@ -125,3 +125,77 @@ module D_FF(D, Clk, Q);
 	
 endmodule
 */
+
+module Lab3(LEDR, SW, HEX0, HEX1, HEX2, HEX3, HEX4, HEX5);
+
+  input [9:0] SW;
+  output [9:0] LEDR;
+  output [0:6] HEX0, HEX1, HEX2, HEX3, HEX4, HEX5;
+
+  wire [7:0] A, B;
+  wire [7:0] Ao;//Bo;
+  wire [8:0] Sum;
+
+  assign LEDR [9:1] = 9'b0;
+  assign A [7:0] = SW[7:0];
+  assign B [7:0] = SW[7:0];
+
+  D_FF F0(.D(A), .Clk(SW[1]), .R(~SW[0]), .Q(Ao));
+  //D_FF F1(.D(B), .Clk(SW[1]), .R(~SW[0]), .Q(Bo));
+ 
+  Adder A0(.A(Ao), .B(B), .S(Sum));
+
+  BCD_7seg Seg0(.Value(B[3:0]), .Display(HEX0[0:6]));
+  BCD_7seg Seg1(.Value(B[7:4]), .Display(HEX1[0:6]));
+  BCD_7seg Seg2(.Value(A[3:0]), .Display(HEX2[0:6]));
+  BCD_7seg Seg3(.Value(A[7:4]), .Display(HEX3[0:6]));
+  BCD_7seg Seg4(.Value(Sum[3:0]), .Display(HEX4[0:6]));
+  BCD_7seg Seg5(.Value(Sum[7:4]), .Display(HEX5[0:6]));
+
+  assign LEDR[0] = Sum[8];
+
+endmodule
+
+module D_FF(D, Clk, R, Q);
+
+	input [7:0] D;
+  input Clk, R;
+	output reg [7:0] Q;
+	
+	always @ (posedge Clk or R)
+	begin
+    if(R)
+    begin
+      Q [7:0] <= 8'h00;
+    end
+    else if(Clk)
+    begin
+		  Q [7:0] <= D [7:0];
+    end
+  end
+	
+endmodule
+
+module Adder(A, B, S);
+
+  input [7:0] A, B;
+  output [8:0] S;
+
+  assign S [8:0] = {1'b0, A[7:0]} + {1'b0, B[7:0]};
+
+endmodule
+
+module BCD_7seg(Value, Display);
+ 
+  input [3:0] Value;
+  output [0:6] Display;
+  
+  assign Display[0] = (Value[3] & Value[0] & (Value[2] ^ Value[1])) | (~Value[3] & ~Value[1] & (Value[2] ^ Value[0]));
+  assign Display[1] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (Value[3] & Value[1] & Value[0]) | (~Value[3] & Value[2] & (Value[1] ^ Value[0]));
+  assign Display[2] = (Value[3] & Value[2] & (Value[1] | ~Value[0])) | (~Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+  assign Display[3] = (Value[2] & Value[1] & Value[0]) | (~Value[2] & ~Value[1] & Value[0]) | (~Value[3] & Value[2] & ~Value[1] & ~Value[0]) | (Value[3] & ~Value[2] & Value[1] & ~Value[0]);
+  assign Display[4] = (~Value[3] & Value[2] & (~Value[1] | Value[0])) | (~Value[2] & Value[0] & (~Value[3] | ~Value[1]));
+  assign Display[5] = (~Value[3] & ~Value[2] & (Value[1] | Value[0])) | (~Value[3] & Value[0] & (~Value[2] | Value[1])) | (Value[3] & Value[2] & ~Value[1] & Value[0]);
+  assign Display[6] = (~Value[3] & ~Value[2] & ~Value[1]) | (~Value[3] & Value[2] & Value[1] & Value[0]) | (Value[3] & Value[2] & ~Value[1] & ~Value[0]);
+   
+endmodule 
