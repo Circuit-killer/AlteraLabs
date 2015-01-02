@@ -3,9 +3,9 @@
 module TestBench();
 
   reg [9:0] S;
-  wire [0:6] H0, H1;
+  wire [0:6] H0, H1, H2, H3;
   wire [9:0] Led;
-  reg Key;
+  reg [3:0] Key;
 
   initial
   begin
@@ -33,8 +33,8 @@ module TestBench();
 
   end
 
-  always #1 Key = ~Key;
+  always #1 Key[0] = ~Key[0];
 
-  Lab4 L0(.KEY0(Key), .SW(S), .HEX0(H0), .HEX1(H1), .LEDR(Led));
+  Lab4 L0(.KEY(Key), .SW(S), .HEX0(H0), .HEX1(H1), .HEX2(H2), .HEX3(H3), .LEDR(Led));
 
 endmodule

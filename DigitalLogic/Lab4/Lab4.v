@@ -1,3 +1,4 @@
+/* Step 1
 module Lab4(KEY, SW, HEX0, HEX1, LEDR);
 
   input [9:0] SW;
@@ -51,6 +52,75 @@ module T_FF(En, Clk, Clr, Q);
     else if(En)
     begin
       Q = ~Q;
+    end
+  end
+
+endmodule
+
+module Hex_Disp(Value, Disp);
+
+  input [3:0] Value;
+  output reg [0:6] Disp;
+
+  always @ *
+  begin
+    case (Value)
+      4'h0 : Disp = 7'b0000001;
+      4'h1 : Disp = 7'b1001111;
+      4'h2 : Disp = 7'b0010010;
+      4'h3 : Disp = 7'b0000110;
+      4'h4 : Disp = 7'b1001100;
+      4'h5 : Disp = 7'b0100100;
+      4'h6 : Disp = 7'b0100000;
+      4'h7 : Disp = 7'b0001111;
+      4'h8 : Disp = 7'b0000000;
+      4'h9 : Disp = 7'b0001100;
+      4'hA : Disp = 7'b0001000;
+      4'hB : Disp = 7'b1100000;
+      4'hC : Disp = 7'b0110001;
+      4'hD : Disp = 7'b1000010;
+      4'hE : Disp = 7'b0110000;
+      4'hF : Disp = 7'b0111000;
+    endcase
+  end
+
+endmodule
+*/
+
+module Lab4(HEX0, HEX1, HEX2, HEX3, KEY, SW, LEDR);
+
+  input [9:0] SW;
+  input [3:0] KEY;
+  output [9:0] LEDR;
+  output [0:6] HEX0, HEX1, HEX2, HEX3;
+
+  wire [15:0] Q;
+
+  Counter_16bit C0(.Q(Q), .Clr(SW[0]), .En(SW[1]), .Clk(KEY[0]));
+
+  Hex_Disp H0(.Value(Q[3:0]), .Disp(HEX0));
+  Hex_Disp H1(.Value(Q[7:4]), .Disp(HEX1));
+  Hex_Disp H2(.Value(Q[11:8]), .Disp(HEX2));
+  Hex_Disp H3(.Value(Q[15:12]), .Disp(HEX3));
+
+  assign LEDR [9:0] = 10'b0;
+
+endmodule
+
+module Counter_16bit(Q, Clr, En, Clk);
+
+  output reg [15:0] Q;
+  input En, Clk, Clr;
+
+  always @ (posedge Clk)
+  begin
+    if(~Clr)
+    begin
+      Q <= 0;
+    end
+    else if(En)
+    begin
+      Q <= Q + 1;
     end
   end
 
