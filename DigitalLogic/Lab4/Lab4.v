@@ -183,18 +183,22 @@ module Counter_Clock(Q, Clk, Clr, En);
   begin
     if(~Clr)
     begin
-      Q <= 0;
+      Q <= 26'b0;
       En <= 1'b0;
-    end
-    else if(Q == 50000000)
-    begin
-      Q <= 1'b0;
-      En <= 1'b1;
     end
     else
     begin
-      Q <= Q + 1;
-      En <= 1'b0;
+       //if(Q == 50000000)
+       if(Q == 10)
+       begin
+         Q <= 1'b0;
+         En <= 1'b1;
+       end
+       else
+       begin
+         Q <= Q + 1;
+         En <= 1'b0;
+       end
     end
   end
 endmodule
@@ -204,11 +208,11 @@ module Counter_4bit(Q, Clr, En, Clk);
   output reg [3:0] Q;
   input En, Clk, Clr;
 
-  always @ (posedge Clk)
+  always @ (negedge Clk)
   begin
     if(~Clr)
     begin
-      Q <= 0;
+      Q <= 4'b0;
     end
     else if(En)
     begin
@@ -218,7 +222,7 @@ module Counter_4bit(Q, Clr, En, Clk);
       end
       else
       begin
-        Q <= 1'b0;
+        Q <= 4'b0;
       end
     end
   end
