@@ -186,8 +186,7 @@ module Counter_Clock(Q, Clk, Clr, En);
       Q <= 0;
       En <= 1'b0;
     end
-    else if(Q == 25000000)
-    //else if(Q == 24999999)
+    else if(Q == 50000000)
     begin
       Q <= 1'b0;
       En <= 1'b1;
